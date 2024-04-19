@@ -4,44 +4,46 @@ import os
 # Enter username
 user = 'edberthandjaja'
 
-# Handle Desktop Cleaning
-# Screenshots
-if not os.path.exists('/Users/' + user + '/Desktop/ScreenShots'):
-    #os.makedirs('/Users/' + user + '/Desktop/ScreenShots')
-    print('Creating folder')
-# School
-elif not os.path.exists('/Users/' + user + '/Desktop/School'):
-    #os.makedirs('/Users/' + user + '/Desktop/School')
-    print('Creating folder')
+# Desktop Cleaning
+desktop_path = '/Users/' + user + '/Desktop'
+desktop_folders = {
+    'ScreenShots': 'Screenshot',
+    'School': ['Math', 'Comp', 'Gen']
+}
+
+for folder, prefixes in desktop_folders.items():
+    folder_path = os.path.join(desktop_path, folder)
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        print(f'Created folder: {folder}')
     
+    for file in os.listdir(desktop_path):
+        file_path = os.path.join(desktop_path, file)
+        if os.path.isfile(file_path):
+            for prefix in prefixes:
+                if file.startswith(prefix):
+                    shutil.move(file_path, os.path.join(folder_path, file))
+                    print(f'Moved {file} to {folder}')
+                    break  # Move to next file after first match
 
-files_on_desktop = os.listdir('/Users/' + user + '/Desktop')
-for file in files_on_desktop:
-    file_dir_desktop = '/Users/' + user + '/Desktop' + '/' + file
-    if file.startswith('Screenshot'):
-        #shutil.move(file_dir_desktop, '/Users/' + user + '/Desktop/ScreenShots')
-        print(f'Moving {file}...')
-    elif file.startswith('Math') or file.startswith('Comp') or file.startswith('Gen'):
-        #shutil.move(file_dir_desktop, '/Users/' + user + '/Desktop/School')
-        print(f'Moving {file}...')
+# Downloads Cleaning
+downloads_path = '/Users/' + user + '/Downloads'
+downloads_folders = {
+    'Installers': 'dmg',
+    'Images': ['png', 'jpeg', 'jpg', 'heic']
+}
 
-# Handle Downloads Cleaning
-# Installers
-if not os.path.exists('/Users/' + user + '/Downloads/Installers'):
-    #os.makedirs('/Users/' + user + '/Desktop/Installers')
-    print('Creating folder')
-# Images
-if not os.path.exists('/Users/' + user + '/Downloads/Images'):
-    #os.makedirs('/Users/' + user + '/Desktop/Images')
-    print('Creating folder')
-
-files_on_downloads = os.listdir('/Users/' + user + '/Downloads')
-for file in files_on_downloads:
-    file_dir_downloads = '/Users/' + user + '/Desktop' + '/' + file
+for folder, extensions in downloads_folders.items():
+    folder_path = os.path.join(downloads_path, folder)
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        print(f'Created folder: {folder}')
     
-    if file.endswith('dmg'):
-        #shutil.move(file_dir_downloads, '/Users/' + user + '/Desktop/Installers')
-        print(f'Moving {file}...')
-    elif file.endswith('png') or file.endswith('jpeg') or file.endswith('HEIC') or file.endswith('jpg'):
-        #shutil.move(file_dir_downloads, '/Users/' + user + '/Desktop/Images')
-        print(f'Moving {file}...')
+    for file in os.listdir(downloads_path):
+        file_path = os.path.join(downloads_path, file)
+        if os.path.isfile(file_path):
+            for ext in extensions:
+                if file.lower().endswith(ext):
+                    shutil.move(file_path, os.path.join(folder_path, file))
+                    print(f'Moved {file} to {folder}')
+                    break  # Move to next file after first match
